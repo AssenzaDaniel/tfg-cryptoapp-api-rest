@@ -25,9 +25,6 @@ export const getData = async () => {
             return { ...symbol, quoteVolume: Number(symbol.quoteVolume) }
         })
 
-    console.log(result.length);
-    console.log(result.filter(sym => sym.quoteVolume === 0).length);
-
     return result
 }
 

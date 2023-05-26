@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { symbolsPerVolumeQuote, symbolsSearch } from '../controllers/search.js'
+import { symbolsPerVolumeQuote, searchSymbols } from '../controllers/search.js'
 
 const router = Router()
 
@@ -13,7 +13,7 @@ router.get('/24hrsChanges',async (request, response) => {
 
 router.get('/search',async (request, response) => {
     const symbol = request.query.symbol.toUpperCase()
-    const symbols = await symbolsSearch(symbol)
+    const symbols = await searchSymbols(symbol)
 
     response.contentType('application/json')
     response.send(symbols)

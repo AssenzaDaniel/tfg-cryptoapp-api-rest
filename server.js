@@ -4,8 +4,6 @@ import fs from 'fs'
 import config from './config.js'
 import router from './api/routes/index.js'
 
-import * as db from './api/services/db-consumer.js'
-
 let data = ''
 const app = Express()
 
@@ -29,7 +27,10 @@ app.get('/api/testimage', (request, response) => {
     // response.contentType('application/json')
     // response.send(json)
     // response.end()
+
+    console.time('cod')
     const image = fs.readFileSync('./wallet.svg', 'base64')
+    console.timeEnd('cod')
     const object = { image }
     
     response.contentType('application/json')

@@ -5,7 +5,16 @@ export const getAllSymbols = async () => {
     return await getData()
 }
 
-export const searchSymbols = (symbol) => {
+export const searchSymbols = async (symbol) => {
+    console.time('search')
+    const symbols = await getData()
+
+    let result = symbols.filter(element => element.symbol.includes(symbol))
+    result = orderByVolume(result, 30)
+
+    console.timeEnd('search')
+
+    return result
 }
 
 export const symbolsPerVolumeQuote = async () => {
@@ -17,21 +26,9 @@ export const symbolsPerVolumeQuote = async () => {
 
     result = result.map(symbol => {
         const name = symbol.symbol.replace('USDT', '')
-        return {...symbol, symbol: name }
+        return { ...symbol, symbol: name }
     })
     console.timeEnd('volume')
-
-    return result
-}
-
-export const symbolsSearch = async (symbolSearch) => {
-    console.time('search')
-    const symbols = await getData()
-
-    let result = symbols.filter(symbol => symbol.symbol.includes(symbolSearch) && symbol.quoteVolume !== 0)
-    result = orderByVolume(result, 30)
-
-    console.timeEnd('search')
 
     return result
 }
