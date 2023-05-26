@@ -1,47 +1,52 @@
 import Express from 'express'
 import Cors from 'cors'
+import fs from 'fs'
+import config from './config.js'
+import router from './api/routes/index.js'
 
-import { get24Hrs } from './services/binance-api/getSymbols.js'
+import * as db from './api/services/db-consumer.js'
 
-let data = await get24Hrs()
+let data = ''
 const app = Express()
 
 const corsOptions = {
-    origin: 'http://localhost:1616'
+    origin: `http://${config.front.dev.hostname}:${config.front.dev.port}`
 }
 
 app.use(Cors(corsOptions))
+app.use(Express.json())
+app.use('/api', router)
 
 app.get('/', (request, response) => {
     response.send('Hola mundo!')
     response.end()
 })
 
-app.get('/api/24hrsChanges', (request, response) => {
+app.get('/api/testimage', (request, response) => {
+    
+    // const icon = fs.readFileSync('./wallet.svg', 'utf-8')
+    // const json = { icon }
+    // response.contentType('application/json')
+    // response.send(json)
+    // response.end()
+    const image = fs.readFileSync('./wallet.svg', 'base64')
+    const object = { image }
+    
+    response.contentType('application/json')
+    response.send(object)
+    response.end()
+    // response.sendFile('capt.png', { root: '.' }, () => {
+    //     response.end()
+    // })
+})
+
+app.post('/api/24hrsChanges', (request, response) => {
+    console.log(request.body.symbols)
     response.contentType('application/json')
     response.send(data)
     response.end()
 })
 
-app.get('/api/search', (request, response) => {
+app.listen(config.api.dev.port)
 
-    const searchSymbol = request.query.symbol
-
-    if (!searchSymbol) {
-        response.contentType('text')
-        response.send('Error en la petición')
-        response.end()
-    }
-
-    const filteredData = data.filter(symbol => symbol.symbol.match(searchSymbol))
-
-    response.contentType('application/json')
-    response.send(filteredData)
-    response.end()
-})
-
-app.listen(1717)
-
-console.info(`\n\n-- Server running at http://localhost:1717`)
-
-setInterval(async () => data = await get24Hrs(), 5000)
+console.info(`\n\n-- Server running at http://${config.api.dev.hostname}:${config.api.dev.port}\n`)
