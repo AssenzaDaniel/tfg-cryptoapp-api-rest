@@ -1,4 +1,4 @@
-import { orderByVolume } from '../services/data-filters.js'
+import { appendIcons, orderByVolume } from '../utils/data-filters.js'
 import { getData } from '../services/db-consumer.js'
 
 export const getAllSymbols = async () => {
@@ -7,28 +7,27 @@ export const getAllSymbols = async () => {
 
 export const searchSymbols = async (symbol) => {
     console.time('search')
-    const symbols = await getData()
+    let symbols = await getData()
 
-    let result = symbols.filter(element => element.symbol.includes(symbol))
-    result = orderByVolume(result, 30)
+    symbols = symbols.filter(element => element.symbol.includes(symbol))
+    symbols = orderByVolume(symbols, 30)
+    appendIcons(symbols)
 
     console.timeEnd('search')
-
-    return result
+    return symbols
 }
 
 export const symbolsPerVolumeQuote = async () => {
     console.time('volume')
-    const symbols = await getData()
+    let symbols = await getData()
 
-    let result = symbols.filter(symbol => symbol.symbol.endsWith('USDT'))
-    result = orderByVolume(result, 10)
-
-    result = result.map(symbol => {
-        const name = symbol.symbol.replace('USDT', '')
-        return { ...symbol, symbol: name }
+    symbols = symbols.filter(symbol => symbol.symbol.endsWith('USDT'))
+    symbols = orderByVolume(symbols, 10)
+    symbols.forEach(symbol => {
+        symbol.symbol = symbol.symbol.replace('USDT', '')
     })
-    console.timeEnd('volume')
+    appendIcons(symbols)
 
-    return result
+    console.timeEnd('volume')
+    return symbols
 }

@@ -4,7 +4,6 @@ import fs from 'fs'
 import config from './config.js'
 import router from './api/routes/index.js'
 
-let data = ''
 const app = Express()
 
 const corsOptions = {
@@ -39,13 +38,6 @@ app.get('/api/testimage', (request, response) => {
     // response.sendFile('capt.png', { root: '.' }, () => {
     //     response.end()
     // })
-})
-
-app.post('/api/24hrsChanges', (request, response) => {
-    console.log(request.body.symbols)
-    response.contentType('application/json')
-    response.send(data)
-    response.end()
 })
 
 app.listen(config.api.dev.port)
