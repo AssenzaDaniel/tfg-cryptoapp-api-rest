@@ -30,14 +30,30 @@ export const symbolsPerVolumeQuote = async () => {
     const json = JSON.parse(symbolsName)
 
     symbols = symbols.filter(symbol => symbol.symbol.endsWith('USDT'))
-    symbols = orderByVolume(symbols, 10)
+    symbols = orderByVolume(symbols, 20)
+
     symbols.forEach(symbol => {
-        symbol.symbol = symbol.symbol.replace('USDT', '')
-        const coinName = json.find(element => element.symbol === symbol.symbol)
-        symbol.name = coinName.name
+        const coinSymbol = symbol.symbol.replace('USDT', '')
+        const coinName = json.find(element => element.symbol === coinSymbol)
+
+        symbol.name = coinName ? coinName.name : null
     })
     appendIcons(symbols)
 
     console.timeEnd('volume')
+    return symbols
+}
+
+export const getSymbols = async (requestedSymbols) => {
+    const symbols = await getData()
+
+    return symbols.filter(symbol => requestedSymbols.includes(symbol.symbol))
+}
+
+export const getSubscriptionsSymbols = async (email) => {
+    const subscriptions = await getSubscriptions(email)
+    const symbols = await getSymbols(subscriptions)
+    appendIcons(symbols)
+
     return symbols
 }

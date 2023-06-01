@@ -1,19 +1,14 @@
 import { Router } from 'express'
-import { symbolsPerVolumeQuote, searchSymbols } from '../controllers/search.js'
+import { searchSymbols } from '../controllers/search.js'
 import { HTTP_STATUS } from '../constants.js'
 
 import subscriptionsRoutes from './subscriptions.js'
+import symbolsRoutes from './symbols.js'
 
 const router = Router()
+
 router.use('/subscriptions', subscriptionsRoutes)
-
-router.get('/symbols', async (request, response) => {
-    const symbols = await symbolsPerVolumeQuote()
-
-    response.contentType('application/json')
-    response.send(symbols)
-    response.end()
-})
+router.use('/symbols', symbolsRoutes)
 
 router.post('/search', async (request, response) => {
     const { email, symbol } = request.body
