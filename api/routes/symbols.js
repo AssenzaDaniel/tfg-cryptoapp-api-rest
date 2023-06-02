@@ -14,11 +14,24 @@ router.get('/', async (request, response) => {
 
 router.get('/updates', async (request, response) => {
     const requestedSymbols = JSON.parse(request.query.symbols)
-    const symbols = await getSymbols(requestedSymbols)
-    
-    response.contentType('application/json')
-    response.send(symbols)
-    response.end()
+
+    response.set({
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive'
+    })
+    response.flushHeaders()
+    response.write('retry: 10000\n\n')
+
+    const event = setInterval(async () => {
+        const symbols = await getSymbols(requestedSymbols)
+        response.write(`data: ${JSON.stringify(symbols)}\n\n`)
+    }, 2000)
+
+    response.on('close', () => {
+        clearInterval(event)
+        response.end()
+    })
 })
 
 export default router
