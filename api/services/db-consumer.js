@@ -2,7 +2,7 @@ import { XMLHttpRequest } from 'xmlhttprequest'
 import { HTTP_STATUS } from '../constants.js'
 import config from '../../config.js'
 
-const API_URL = `http://${config.back.dev.hostname}:${config.back.dev.port}`
+const API_URL = `http://${config.back.hostname}:${config.back.port}`
 
 const dbConnection = (method, endpoint = '', data = null) => {
     const xhr = new XMLHttpRequest()
