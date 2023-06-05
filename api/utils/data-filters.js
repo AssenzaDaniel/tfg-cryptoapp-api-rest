@@ -51,7 +51,7 @@ export const appendFavorites = (symbols, favorites) => {
 const obtainPossibleIconName = (symbols) => {
     const names = []
     symbols.forEach(symbol => {
-        const name = symbol.symbol
+        const name = symbol.symbol.toLowerCase()
 
         names.push({
             name,
