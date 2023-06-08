@@ -4,7 +4,14 @@ import config from '../../config.js'
 
 const API_URL = `http://${config.back.hostname}:${config.back.port}`
 
-const dbConnection = (method, endpoint = '', data = null) => {
+/**
+ * 
+ * @param {String} method Método de la petición
+ * @param {String} endpoint Endpoint del backend
+ * @param {JSON} data Data to send in the petition
+ * @returns 
+ */
+const request = (method, endpoint = '', data = null) => {
     const xhr = new XMLHttpRequest()
 
     if (data) {
@@ -27,8 +34,12 @@ const dbConnection = (method, endpoint = '', data = null) => {
     })
 }
 
+/**
+ * Obtiene los simbolos desde el back y formatea los datos según la necesidad
+ * @returns {Array<JSON>}
+ */
 export const getData = async () => {
-    let symbols = await dbConnection('GET', '/symbols')
+    let symbols = await request('GET', '/symbols')
     symbols = JSON.parse(symbols)
     
     symbols.forEach(symbol => {
@@ -40,12 +51,21 @@ export const getData = async () => {
     return symbols
 }
 
+/**
+ * @param {String} email Correo del usuario
+ * @param {String} symbol Simbolo al que realizar la subscripción
+ * @returns {HTTP_STATUS} 404 si falla la subscripción en el backend
+ */
 export const subscribe = async (email, symbol) => {
-    return dbConnection('PUT', '/subscriptions', { email, symbol })
+    return request('PUT', '/subscriptions', { email, symbol })
 }
 
+/**
+ * @param {String} email Correo del usuario
+ * @returns {Array<String>} Simbolos a los que el usuario esta subscrito
+ */
 export const getSubscriptions = async (email) => {
-    const subscriptions = await dbConnection('POST', '/subscriptions', { email })
+    const subscriptions = await request('POST', '/subscriptions', { email })
 
     return JSON.parse(subscriptions)
 }

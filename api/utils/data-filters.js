@@ -1,6 +1,11 @@
-import { log } from 'console'
-import fs from 'fs'
+import { getSymbolIcon } from './icons-helper.js'
 
+/**
+ * @param {Array<JSON>} data Simbolos que recibe del backend
+ * @param {Number} limit Número límite que se van a extraer
+ * @param {Boolean} ascendingOrder Orden ascendiente
+ * @returns {Array<JSON>} Simbolos ya tratados
+ */
 export const orderByVolume = (data, limit = null, ascendingOrder = false) => { 
     const order = ascendingOrder 
         ? (a, b) => a.quoteVolume - b.quoteVolume 
@@ -11,34 +16,24 @@ export const orderByVolume = (data, limit = null, ascendingOrder = false) => {
     return limit ? data.slice(0, limit) : data
 }
 
+/**
+ * Añade los íconos en base64 a los símbolos
+ * @param {Array<JSON>} symbols Simbolos a los que añadir los iconos
+ */
 export const appendIcons = (symbols) => {
-    const iconsNames = obtainPossibleIconName(symbols)
-    let index = 0
 
     symbols.forEach(symbol => {
+        const possibleIcons = obtainPossibleIconName(symbol.symbol)
+        const icon = getSymbolIcon(possibleIcons)
 
-        const names = iconsNames[index++].possibleNames
-        let icon = null
-
-        names.forEach(name => {
-
-            if (fs.existsSync(`assets/icons/color/${name}.svg`)) {
-                icon = fs.readFileSync(`assets/icons/color/${name}.svg`, 'base64')
-                return
-            }
-        })
-
-        if (!icon) 
-            icon = fs.readFileSync('assets/icons/generic-crypto.svg', 'base64')
-        
         symbol.icon = icon
     })
 }
 
 /**
- * 
- * @param { JSON } symbols 
- * @param { Array<String> } favorites 
+ * Añade el atributo favorite a los símbolos marcados como favoritos
+ * @param { JSON } symbols Símbolos a los que añadir si es favorito
+ * @param { Array<String> } favorites Símbolos que son favortios del usuario
 */
 export const appendFavorites = (symbols, favorites) => {
     
@@ -48,21 +43,18 @@ export const appendFavorites = (symbols, favorites) => {
     })
 }
 
-const obtainPossibleIconName = (symbols) => {
-    const names = []
-    symbols.forEach(symbol => {
-        const name = symbol.symbol.toLowerCase()
-
-        names.push({
-            name,
-            possibleNames: [
-                name,
-                name.substring(0, 3),
-                name.substring(0, 4),
-                name.substring(0, 5),
-            ]
-        })
-    })
+/**
+ * Devuelve un Array los posibles nombres de los íconos para el símbolo
+ * @param {String} symbol Símbolo
+ * @returns {Array<String>}
+ */
+const obtainPossibleIconName = (symbol) => {
+    const names = [
+        symbol,
+        symbol.substring(0, 3),
+        symbol.substring(0, 4),
+        symbol.substring(0, 5),
+    ]
 
     return names
 }

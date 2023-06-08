@@ -7,7 +7,6 @@ const router = Router()
 
 router.put('/', async (request, response) => {
     const  { email, symbol } = request.body
-    console.log(email, symbol)
 
     try {
         await subscribe(email, symbol)

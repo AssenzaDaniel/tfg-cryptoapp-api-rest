@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "predev": "rm -r ./node_modules && npm i",
-    "dev": "NODE_ENV=dev nodemon server.js",
+    "dev": "NODE_ENV=dev nodemon --ignore api/static server.js",
     "preserver": "rm -r ./node_modules && npm i --omit=dev",
     "server": "NODE_ENV=prod node server.js"
   },

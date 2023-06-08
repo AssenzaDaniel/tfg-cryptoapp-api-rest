@@ -21,7 +21,7 @@ router.get('/updates', async (request, response) => {
         'Connection': 'keep-alive'
     })
     response.flushHeaders()
-    response.write('retry: 10000\n\n')
+    response.write('retry: 3000\n\n')
 
     const event = setInterval(async () => {
         const symbols = await getSymbols(requestedSymbols)
