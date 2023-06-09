@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { searchSymbols } from '../controllers/search.js'
+import { logUser } from '../services/db-consumer.js'
 import { HTTP_STATUS } from '../constants.js'
 
 import subscriptionsRoutes from './subscriptions.js'
@@ -16,6 +17,15 @@ router.post('/search', async (request, response) => {
 
     response.contentType('application/json')
     response.send(symbols)
+    response.end()
+})
+
+router.post('/user/login', async (request, response) => {
+    const userData = request.body
+    const user = await logUser(userData)
+
+    response.contentType('application/json')
+    response.send(user)
     response.end()
 })
 

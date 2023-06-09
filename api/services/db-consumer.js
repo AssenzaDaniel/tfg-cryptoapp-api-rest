@@ -69,3 +69,7 @@ export const getSubscriptions = async (email) => {
 
     return JSON.parse(subscriptions)
 }
+
+export const logUser = async (userData) => {
+    return request('PUT', '/users', userData)
+}
