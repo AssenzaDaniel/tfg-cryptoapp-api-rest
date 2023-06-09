@@ -14,11 +14,13 @@ const config = {
 
     back: {
         hostname: process.env.BACK_HOST,
+        ip: process.env.IP,
         port: process.env.BACK_PORT
     },
 
     front: {
         hostname: process.env.FRONT_HOST,
+        ip: process.env.IP,
         port: process.env.FRONT_PORT
     }
 }

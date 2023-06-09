@@ -7,6 +7,9 @@ const app = Express()
 const hostname = config.api.hostname
 const port = config.api.port
 
+console.log(`http://${config.front.hostname}:${config.front.port}`)
+console.log(`http://${config.front.ip}:${config.front.port}`)
+
 const corsOptions = {
     origin: [
         `http://${config.front.hostname}:${config.front.port}`,
