@@ -65,9 +65,11 @@ export const symbolsPerVolumeQuote = async () => {
  * @returns {Array<JSON>}
  */
 export const getSymbols = async (requestedSymbols) => {
-    const symbols = await getData()
+    let symbols = await getData()
+    symbols = symbols.filter(symbol => requestedSymbols.includes(symbol.symbol))
+    appendIcons(symbols)
 
-    return symbols.filter(symbol => requestedSymbols.includes(symbol.symbol))
+    return symbols
 }
 
 /**
