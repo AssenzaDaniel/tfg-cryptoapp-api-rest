@@ -8,6 +8,7 @@ dotenv.config({
 const config = {
     api: {
         hostname: process.env.HOST,
+        ip: process.env.IP,
         port: process.env.PORT
     },
 

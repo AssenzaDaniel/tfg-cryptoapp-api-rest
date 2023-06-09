@@ -8,7 +8,10 @@ const hostname = config.api.hostname
 const port = config.api.port
 
 const corsOptions = {
-    origin: `http://${config.front.hostname}:${config.front.port}`
+    origin: [
+        `http://${config.front.hostname}:${config.front.port}`,
+        `http://${config.front.ip}:${config.front.port}`
+    ]
 }
 
 app.use(Cors(corsOptions))
